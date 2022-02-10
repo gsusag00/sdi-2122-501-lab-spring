@@ -1,14 +1,19 @@
 package com.uniovi.notaneitor.controllers;
 
 import com.uniovi.notaneitor.entities.Mark;
+import com.uniovi.notaneitor.services.MarksService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MarksController {
 
+    @Autowired //Necesitamos la anotacion autowired para inyectar el bean del servicio
+    private MarksService marksService;
+
     @RequestMapping("/mark/list")
     public String getList(){
-        return "Getting List";
+        return marksService.getMarks().toString();
     }
 
     /**
@@ -19,12 +24,13 @@ public class MarksController {
      *
      * Ahora que tenemos la entidad Mark podemos cambiar las anotaciones @RequestParam por @ModelAttribute, de esta manera podemos recibir un objeto,
      * mark en este caso
-     * @param mark
-     * @return
+     * @param mark la nota que queremos añadir
+     * @return devuelve un Ok al añadirse la nota de manera correcta.
      */
     @RequestMapping(value = "/mark/add", method = RequestMethod.POST )
     public String setMark(@ModelAttribute Mark mark){
-        return "Added: " + mark.getDescription() + " with score: " + mark.getScore() + " id: " + mark.getId();
+        marksService.addMark(mark);
+        return "Ok";
     }
 
     /**
@@ -36,11 +42,17 @@ public class MarksController {
      * Para hacer que el dato no tenga que venir en la URL (?id=x) se puede utilizar la anotacion @PathVariable, pero para que esto funcione necesitamos
      * cambiar la url de la peticion a la que el metodo va a responder, añadiendo /{parametro} al final de la URL. Esto hace que el parametro sea recibido
      * por su posicion en el path en vez de formar parte de la URL
-     * @param id
-     * @return
+     * @param id el id de la nota que queremos obtener los detalles
+     * @return devuelve los datos de la string
      */
     @RequestMapping("/mark/details/{id}")
     public String getDetails(@PathVariable Long id){
-        return "Getting Details => " + id;
+        return marksService.getMark(id).toString();
+    }
+
+    @RequestMapping("/mark/delete/{id}")
+    public String deleteMark(@PathVariable Long id) {
+        marksService.deleteMark(id);
+        return "Ok";
     }
 }
