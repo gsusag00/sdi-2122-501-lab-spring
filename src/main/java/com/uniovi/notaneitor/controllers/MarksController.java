@@ -79,4 +79,15 @@ public class MarksController {
         marksService.addMark(mark);
         return "redirect:/mark/details/"+id;
     }
+
+    /**
+     * Estamos definiendo un endpoint (una url) que devuelve el fragmento correspondiente en vez de retornar la vista completa.
+     * @param model modelo de la aplicacion.
+     * @return devuelve solo el fragmento tableMarks de la vista mark/list
+     */
+    @RequestMapping("/mark/list/update")
+    public String updateList(Model model) {
+        model.addAttribute("markList",marksService.getMarks());
+        return "mark/list :: tableMarks";
+    }
 }

@@ -1,3 +1,0 @@
-<head th:replace="fragments/head"></head>
-<nav th:replace="fragments/nav"></nav>
-<footer th:replace="fragments/footer"></footer>
