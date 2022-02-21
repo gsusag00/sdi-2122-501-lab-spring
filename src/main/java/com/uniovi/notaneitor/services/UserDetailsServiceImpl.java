@@ -15,19 +15,17 @@ import java.util.Set;
 
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
-
     @Autowired
     private UsersRepository usersRepository;
-
     @Override
     public UserDetails loadUserByUsername(String dni) throws UsernameNotFoundException {
         User user = usersRepository.findByDni(dni);
-
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_STUDENT"));
-        if(user==null) {
+        if (user == null) {
             throw new UsernameNotFoundException(dni);
         }
-        return new org.springframework.security.core.userdetails.User(user.getDni(),user.getPassword(),grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(
+                user.getDni(), user.getPassword(), grantedAuthorities);
     }
 }

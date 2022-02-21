@@ -1,5 +1,6 @@
 package com.uniovi.notaneitor;
 
+import com.uniovi.notaneitor.validators.SignUpFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

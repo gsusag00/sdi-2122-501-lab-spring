@@ -3,11 +3,14 @@ package com.uniovi.notaneitor.controllers;
 import com.uniovi.notaneitor.entities.User;
 import com.uniovi.notaneitor.services.SecurityService;
 import com.uniovi.notaneitor.services.UsersService;
+import com.uniovi.notaneitor.validators.SignUpFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,9 @@ public class UsersController {
 
     @Autowired
     private SecurityService securityService;
+
+    @Autowired
+    private SignUpFormValidator signUpFormValidator;
 
     @RequestMapping("/user/list")
     public String getListado(Model model) {
@@ -66,17 +72,23 @@ public class UsersController {
 
     /**
      * Crea un nuevo usuario con el rol student, lo identifica automaticamente y redirige la navegacion a home
-     * @param user
-     * @param model
-     * @return
      */
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
-    public String signup(@ModelAttribute("user") User user, Model model) {
+    public String signup(@Validated @ModelAttribute("user") User user, BindingResult result) {
+        signUpFormValidator.validate(user,result);
+        if(result.hasErrors()) {
+            return "signup";
+        }
+
         usersService.addUser(user);
         securityService.autoLogin(user.getDni(), user.getPasswordConfirm());
         return "redirect:home";
     }
-
+    @RequestMapping(value = "/signup", method = RequestMethod.GET)
+    public String signup(Model model) {
+        model.addAttribute("user", new User());
+        return "signup";
+    }
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model) {
