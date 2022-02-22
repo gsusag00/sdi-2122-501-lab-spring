@@ -3,16 +3,24 @@ package com.uniovi.notaneitor.controllers;
 import com.uniovi.notaneitor.entities.Mark;
 import com.uniovi.notaneitor.entities.Professor;
 import com.uniovi.notaneitor.services.ProfessorService;
+import com.uniovi.notaneitor.validators.AddProfessorFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import javax.naming.Binding;
 
 @Controller
 public class ProfessorController {
 
     @Autowired
     private ProfessorService professorService;
+
+    @Autowired
+    private AddProfessorFormValidator addProfessorFormValidator;
 
     @RequestMapping("/professor/list")
     public String getList(Model model){
@@ -21,7 +29,8 @@ public class ProfessorController {
     }
 
     @RequestMapping(value="/professor/add", method = RequestMethod.POST)
-    public String setProfessor(@ModelAttribute Professor professor){
+    public String setProfessor(@Validated Professor professor, BindingResult result) {
+        addProfessorFormValidator.validate(professor,result);
         professorService.addProfessor(professor);
         return "redirect:/professor/list";
     }
