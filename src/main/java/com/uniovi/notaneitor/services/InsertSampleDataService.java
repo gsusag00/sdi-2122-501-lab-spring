@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashSet;
 import java.util.Set;
 
-//@Service
+@Service
 public class InsertSampleDataService {
 
     @Autowired

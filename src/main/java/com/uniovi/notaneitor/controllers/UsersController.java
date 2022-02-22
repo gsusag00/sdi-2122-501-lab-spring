@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class UsersController {
+
     @Autowired
     private UsersService usersService;
 
@@ -66,8 +67,19 @@ public class UsersController {
 
     @RequestMapping(value = "/user/edit/{id}", method = RequestMethod.POST)
     public String setEdit(Model model, @PathVariable Long id, @ModelAttribute User user) {
-        usersService.addUser(user);
+        User originalUser = usersService.getUser(id);
+        //modificamos el dni, nombre y apellidos.
+        originalUser.setDni(user.getDni());
+        originalUser.setName(user.getName());
+        originalUser.setLastName(user.getLastName());
+        usersService.addUser(originalUser);
         return "redirect:/user/details/" + id;
+    }
+
+    @RequestMapping("user/list/update")
+    public String updateList(Model model){
+        model.addAttribute("usersList",usersService.getUsers());
+        return "user/list :: tableUsers";
     }
 
     /**
