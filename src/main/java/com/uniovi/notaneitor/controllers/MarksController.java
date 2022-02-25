@@ -8,6 +8,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
+import java.util.HashSet;
+import java.util.Set;
+
 //Tenemos que cambiar @RestController por @Controller ya que esta especifica una respuesta con contenido HTML y no REST
 @Controller
 public class MarksController {
@@ -19,8 +23,16 @@ public class MarksController {
     @Autowired
     private UsersService usersService;
 
+    @Autowired
+    private HttpSession httpSession;
+
     @RequestMapping("/mark/list")
     public String getList(Model model){
+        Set<Mark> consultedList = (Set<Mark>) httpSession.getAttribute("consultedList");
+        if(consultedList == null){
+            consultedList = new HashSet<Mark>();
+        }
+        model.addAttribute("consultedList",consultedList);
         model.addAttribute("markList",marksService.getMarks());
         return "mark/list";
     }

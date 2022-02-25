@@ -6,9 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import javax.servlet.http.HttpSession;
+import java.util.*;
 
 /**
  * La anotacion service indica que esta clase es una se servicio.
@@ -18,6 +17,12 @@ public class MarksService {
 
     @Autowired
     private MarksRepository marksRepository;
+
+    private final HttpSession httpSession;
+
+    public MarksService(HttpSession httpSession) {
+        this.httpSession = httpSession;
+    }
 
     public List<Mark> getMarks() {
         List<Mark> marks = new ArrayList<Mark>();
@@ -33,6 +38,13 @@ public class MarksService {
      * @return
      */
     public Mark getMark(Long id) {
+        Set<Mark> consultedList = (Set<Mark>) httpSession.getAttribute("consultedList");
+        if(consultedList == null) {
+            consultedList = new HashSet<Mark>();
+        }
+        Mark obtainedMark = marksRepository.findById(id).get();
+        consultedList.add(obtainedMark);
+        httpSession.setAttribute("consultedList",consultedList);
         return marksRepository.findById(id).get();
     }
 
