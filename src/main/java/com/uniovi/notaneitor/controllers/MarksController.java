@@ -1,6 +1,7 @@
 package com.uniovi.notaneitor.controllers;
 
 import com.uniovi.notaneitor.entities.Mark;
+import com.uniovi.notaneitor.entities.User;
 import com.uniovi.notaneitor.services.MarksService;
 import com.uniovi.notaneitor.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,9 +28,17 @@ public class MarksController {
     @Autowired
     private HttpSession httpSession;
 
+    /**
+     * La variable Principal contiene el nombre de la autenticacion.
+     * @param model
+     * @param principal
+     * @return
+     */
     @RequestMapping("/mark/list")
-    public String getList(Model model){
-        model.addAttribute("markList",marksService.getMarks());
+    public String getList(Model model, Principal principal){
+        String dni = principal.getName(); //DNI es el name de la autenticacion
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("markList",marksService.getMarksForUser(user));
         return "mark/list";
     }
 
@@ -102,8 +112,10 @@ public class MarksController {
      * @return devuelve solo el fragmento tableMarks de la vista mark/list
      */
     @RequestMapping("/mark/list/update")
-    public String updateList(Model model) {
-        model.addAttribute("markList",marksService.getMarks());
+    public String updateList(Model model, Principal principal) {
+        String dni = principal.getName(); //DNI es el name de la autenticacion
+        User user = usersService.getUserByDni(dni);
+        model.addAttribute("markList",marksService.getMarksForUser(user));
         return "mark/list :: tableMarks";
     }
 
