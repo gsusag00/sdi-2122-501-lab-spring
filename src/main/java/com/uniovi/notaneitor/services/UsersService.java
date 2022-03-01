@@ -29,6 +29,11 @@ public class UsersService {
 //
 //    }
 
+    public Page<User> getUsers(Pageable pageable) {
+        Page<User> users = usersRepository.findAll(pageable);
+        return users;
+    }
+
     public List<User> getUsers() {
         List<User> users = new ArrayList<User>();
         usersRepository.findAll().forEach(users::add);
@@ -53,11 +58,11 @@ public class UsersService {
         usersRepository.deleteById(id);
     }
 
-    public List<User> searchByNameAndLastName(String searchText, User user) {
-        List<User> users = new LinkedList<User>();
+    public Page<User> searchByNameAndLastName(Pageable pageable, String searchText, User user) {
+        Page<User> users = new PageImpl<>(new LinkedList<User>());
         searchText = "%" + searchText + "%";
         if (user.getRole().equals("ROLE_ADMIN")) {
-            users = usersRepository.searchByNameAndLastName(searchText);
+            users = usersRepository.searchByNameAndLastName(pageable, searchText);
         }
         return users;
     }

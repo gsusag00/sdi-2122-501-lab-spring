@@ -12,6 +12,8 @@ import java.util.List;
 public interface UsersRepository extends CrudRepository<User,Long> {
     User findByDni(String dni);
 
+    Page<User> findAll(Pageable pageable);
+
     @Query("SELECT r FROM User r WHERE (LOWER(r.name) LIKE LOWER(?1) OR LOWER(r.lastName) LIKE LOWER(?1))")
-    List<User> searchByNameAndLastName(String seachtxt);
+    Page<User> searchByNameAndLastName(Pageable pageable, String seachtxt);
 }

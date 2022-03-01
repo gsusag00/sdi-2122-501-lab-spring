@@ -6,6 +6,9 @@ import com.uniovi.notaneitor.services.SecurityService;
 import com.uniovi.notaneitor.services.UsersService;
 import com.uniovi.notaneitor.validators.SignUpFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -34,15 +37,15 @@ public class UsersController {
     private RolesService rolesService;
 
     @RequestMapping("/user/list")
-    public String getListado(Model model, Principal principal, @RequestParam(value="", required=false) String searchText ) {
-        List<User> users = new LinkedList<>();
+    public String getListado(Model model, Pageable pageable, Principal principal, @RequestParam(value="", required=false) String searchText ) {
+        Page<User> users = new PageImpl<>(new LinkedList<>());
         String dni = principal.getName();
         User user = usersService.getUserByDni(dni);
         if(searchText != null && !searchText.isEmpty()){
-            users = usersService.searchByNameAndLastName(searchText,user);
+            users = usersService.searchByNameAndLastName(pageable, searchText,user);
         }
         else {
-            users = usersService.getUsers();
+            users = usersService.getUsers(pageable);
         }
         model.addAttribute("usersList", users);
         return "user/list";

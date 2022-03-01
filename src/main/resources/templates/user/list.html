@@ -1,5 +1,5 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="fragments/head"/>
 <body>
 <!-- Barra de Navegación superior -->
@@ -16,10 +16,17 @@
     <p>Los usuarios que actualmente figuran en el sistema son los
         siguientes:</p>
     <button type="button" id="updateButton" class="btn btn-default">Actualizar</button>
-    <script>
-        $("#updateButton").click(function () {
-            $("#tableUsers").load('/user/list/update');
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        $( "#updateButton" ).click(function() {
+            var numberPage = [[${param.page}]];
+            var urlUpdate = '/mark/list/update';
+            if (numberPage != null ){
+                urlUpdate += "?page="+numberPage[0];
+            }
+            $("#tableMarks").load(urlUpdate);
         });
+        /*]]>*/
     </script>
     <div class="table-responsive">
         <table class="table table-hover"th:fragment="tableUsers" id="tableUsers">
@@ -37,17 +44,18 @@
             </thead>
             <tbody>
             <tr th:each="user : ${usersList}">
-                <td scope="row" th:text="${user.dni}">71888888X</td>
-                <td scope="row" th:text="${user.name}">Nombre del alumno</td>
-                <td scope="row" th:text="${user.lastName}">Apellidos del alumno</td>
-                <td scope="row"><a th:href="${'/user/details/' + user.id}">detalles</a></td>
-                <td scope="row"><a th:href="${'/user/edit/' + user.id}">modificar</a></td>
-                <td scope="row"><a th:href="${'/user/delete/' + user.id}">eliminar</a></td>
+                <td th:text="${user.dni}">71888888X</td>
+                <td th:text="${user.name}">Nombre del alumno</td>
+                <td th:text="${user.lastName}">Apellidos del alumno</td>
+                <td><a sec:authorize="hasRole('ROLE_ADMIN')" th:href="${'/user/details/' + user.id}">detalles</a></td>
+                <td><a sec:authorize="hasRole('ROLE_ADMIN')" th:href="${'/user/edit/' + user.id}">modificar</a></td>
+                <td><a sec:authorize="hasRole('ROLE_ADMIN')" th:href="${'/user/delete/' + user.id}">eliminar</a></td>
             </tr>
             </tbody>
         </table>
     </div>
     <div th:if="${#lists.isEmpty(usersList)}"> No users </div>
+    <footer th:replace="fragments/pagination"></footer>
 </div>
 <footer th:replace="fragments/footer"/>
 </body>
