@@ -1,13 +1,18 @@
 package com.uniovi.notaneitor.services;
 
+import com.uniovi.notaneitor.entities.Mark;
 import com.uniovi.notaneitor.entities.User;
 import com.uniovi.notaneitor.repositories.UsersRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -46,6 +51,15 @@ public class UsersService {
 
     public void deleteUser(Long id) {
         usersRepository.deleteById(id);
+    }
+
+    public List<User> searchByNameAndLastName(String searchText, User user) {
+        List<User> users = new LinkedList<User>();
+        searchText = "%" + searchText + "%";
+        if (user.getRole().equals("ROLE_ADMIN")) {
+            users = usersRepository.searchByNameAndLastName(searchText);
+        }
+        return users;
     }
 
 }
