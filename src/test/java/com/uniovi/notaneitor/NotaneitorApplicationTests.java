@@ -1,9 +1,6 @@
 package com.uniovi.notaneitor;
 
-import com.uniovi.notaneitor.pageobjects.PO_HomeView;
-import com.uniovi.notaneitor.pageobjects.PO_Properties;
-import com.uniovi.notaneitor.pageobjects.PO_SignUpView;
-import com.uniovi.notaneitor.pageobjects.PO_View;
+import com.uniovi.notaneitor.pageobjects.*;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -133,7 +130,7 @@ class NotaneitorApplicationTests {
     @Order(8)
     public void PR06B() {
         PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
-        PO_SignUpView.fillForm(driver, "99999990B", "Jose", "Perez", "77777", "77777");
+        PO_SignUpView.fillForm(driver, "99999990A", "Jose", "Perez", "77777", "77777");
         List<WebElement> result = PO_SignUpView.checkElementByKey(driver, "Error.signup.name.length",
                 PO_Properties.getSPANISH() );
 //Comprobamos el error de Nombre corto de nombre corto .
@@ -143,20 +140,59 @@ class NotaneitorApplicationTests {
     }
 
     @Test
-    @Order(7)
-    void PR07() {}
-
-    @Test
-    @Order(8)
-    void PR08() {}
-
-    @Test
     @Order(9)
-    void PR09() {}
+    void PR07() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillForm(driver, "99999990A", "123456");
+//Comprobamos que entramos en la sección privada y nos nuestra el texto a buscar
+        String checkText = "Notas del usuario";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
+    }
 
     @Test
     @Order(10)
-    void PR010() {}
+    void PR08() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillForm(driver, "99999993D", "123456");
+//Comprobamos que entramos en la sección privada y nos nuestra el texto a buscar
+        String checkText = "Notas del usuario";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
+    }
+
+    @Test
+    @Order(11)
+    void PR09() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillForm(driver, "99999988F", "123456");
+//Comprobamos que entramos en la sección privada y nos nuestra el texto a buscar
+        String checkText = "Notas del usuario";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
+    }
+
+    @Test
+    @Order(12)
+    void PR010() {PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillForm(driver, "99999990A", "123456789");
+//Comprobamos que entramos en la sección privada y nos nuestra el texto a buscar
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
+    }
+
+    @Test
+    @Order(13)
+    void PR011() {
+        PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
+        PO_LoginView.fillForm(driver, "99999990A", "123456789");
+//Comprobamos que entramos en la sección privada y nos nuestra el texto a buscar
+        String checkText = "Identifícate";
+        List<WebElement> result = PO_View.checkElementBy(driver, "text", checkText);
+        Assertions.assertEquals(checkText, result.get(0).getText());
+        PO_HomeView.clickOption(driver, "logout", "class", "btn btn-primary");
+    }
 
 
 
