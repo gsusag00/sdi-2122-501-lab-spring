@@ -89,7 +89,7 @@ class NotaneitorApplicationTests {
         PO_HomeView.clickOption(driver, "login", "class", "btn btn-primary");
     }
 
-    //PR04. Opcion de navegacion. Cambio de idioma de Español a Ingles y vuelta a Español
+    //PR04. Opcion de navegacion. Cambio de idioma de Español a Ingles y vuelta aa Español
     @Test
     @Order(5)
     void PR04() {
