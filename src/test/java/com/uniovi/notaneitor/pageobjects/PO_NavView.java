@@ -21,15 +21,17 @@ public class PO_NavView extends PO_View {
      */
     public static void clickOption(WebDriver driver, String textOption, String criterio, String targetText) {
 //CLickamos en la opción de registro y esperamos a que se cargue el enlace de Registro.
-        List<WebElement> elements = SeleniumUtils.waitLoadElementsBy(driver, "@href", textOption, getTimeout());
-//Tiene que haber un sólo elemento.
+        List<WebElement> elements = SeleniumUtils.waitLoadElementsBy(driver, "@href", textOption,
+                getTimeout());
+        //Tiene que haber un sólo elemento.
         Assertions.assertEquals(1, elements.size());
-//Ahora lo clickamos
+        //Ahora lo clickamos
         elements.get(0).click();
-//Esperamos a que sea visible un elemento concreto
+        //Esperamos a que sea visible un elemento concreto
         elements = SeleniumUtils.waitLoadElementsBy(driver, criterio, targetText, getTimeout());
-//Tiene que haber un sólo elemento.
+        //Tiene que haber un sólo elemento.
         Assertions.assertEquals(1, elements.size());
+
     }
 
     /**
